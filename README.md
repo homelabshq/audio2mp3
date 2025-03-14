@@ -51,7 +51,7 @@ You can use the script to convert individual audio files or entire directories o
 ### Command Options
 
 ```txt
-Usage: ./audio3mp3.sh -f <input_file> [-o <output_path>] | -d <directory> [-o <output_directory>] [-r] [-c] [-s] [-nc]
+Usage: ./audio2mp3.sh -f <input_file> [-o <output_path>] | -d <directory> [-o <output_directory>] [-r] [-c] [-s] [-nc]
 
 Options:
   Required Flags (Must provide either -f or -d):
