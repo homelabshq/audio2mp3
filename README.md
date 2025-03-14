@@ -51,17 +51,20 @@ You can use the script to convert individual audio files or entire directories o
 ### Command Options
 
 ```txt
-Usage: ./audio2mp3.sh -f <input_file> [-o <output_file>] | -d <directory> [-o <output_directory>] [-r] [-c] [-s] [-nc]
+Usage: $0 -f <input_file> [-o <output_path>] | -d <directory> [-o <output_directory>] [-r] [-c] [-s] [-nc]
 
 Options:
-  -f, --file <input_file>       Convert a single file.
-  -d, --directory <directory>   Convert all supported files in a directory.
-  -o, --output <output_path>    Specify output file (if using -f) or output directory (if using -d).
-  -r, --recursive               Process directories recursively.
-  -c, --copy                    Convert without re-encoding if possible.
-  -s, --skip-existing           Skip existing files without prompt.
-  -nc, --no-confirm             Automatically overwrite existing files without asking.
-  -h, --help                    Show this help message.
+  Required Flags (Must provide either -f or -d):
+    -f, --file <input_file>       Convert a single file.
+    -d, --directory <directory>   Convert all supported files in a directory.
+
+  Optional Flags:
+    -o, --output <output_path>    Specify output file (if using -f) or output directory (if using -d).
+    -r, --recursive               Process directories recursively.
+    -c, --copy                    Convert without re-encoding if possible.
+    -s, --skip-existing           Skip existing files without prompt.
+    -nc, --no-confirm             Automatically overwrite existing files without asking.
+    -h, --help                    Show this help message.
 ```
 
 ### Examples
