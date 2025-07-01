@@ -4,11 +4,9 @@ set -euo pipefail
 # Script Description: Converts single or multiple audio files to MP3 using FFmpeg.
 # Supports batch processing, metadata preservation, and optional copy mode.
 # Saves output in the input file's directory or a specified location.
-# Author: elvee
-# Version: 0.2.1
+# Author: Mr-Sunglasses
+# Version: 0.0.1
 # License: MIT
-# Creation Date: 27-09-2024
-# Last Modified: 14-03-2025
 # Usage: audio2mp3.sh -f <input_file> [-o <output_path>] | -d <directory> [-o <output_directory>] [-r] [-c] [-s] [-nc]
 
 # Color definitions
@@ -20,6 +18,7 @@ MAGENTA="\033[0;35m"
 CYAN="\033[0;36m"
 WHITE="\033[1;37m"
 BOLD="\033[1m"
+DIM="\033[2m"
 NC="\033[0m" # No Color
 
 # Default values
@@ -28,7 +27,7 @@ OUTPUT_DIR=""
 COPY_MODE=false
 RECURSIVE_MODE=false
 SKIP_EXISTING=false
-NO_CONFIRM=false  # -nc flag
+NO_CONFIRM=false # -nc flag
 
 # Function to display ASCII art
 show_ascii() {
@@ -41,7 +40,7 @@ show_ascii() {
 ██║  ██║╚██████╔╝██████╔╝██║╚██████╔╝███████╗██║ ╚═╝ ██║██║     ██████╔╝
 ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝ ╚═════╝ ╚══════╝╚═╝     ╚═╝╚═╝     ╚═════╝                                                                                                               
 ${NC}"
-  echo -e "${MAGENTA}🎵 Audio to MP3 Converter - v0.2.1 🎵${NC}\n"
+  echo -e "${MAGENTA}🎵 Audio to MP3 Converter - v0.0.1 🎵${NC}\n"
 }
 
 # Function to display help information
@@ -68,6 +67,24 @@ ${GREEN}Options:${NC}
     ${CYAN}-nc, --no-confirm${NC}             Automatically overwrite existing files without asking.
     ${CYAN}-h, --help${NC}                    Show this help message.
   "
+}
+
+# Function to check prerequisites
+check_prerequisites() {
+  echo -e "[${BLUE}+${NC}] ${DIM}Checking prerequisites...${NC}"
+
+  # Check if FFmpeg is installed
+  if ! command -v ffmpeg &>/dev/null; then
+    echo -e "[${RED}✗${NC}] ${RED}FFmpeg is not installed or not in PATH.${NC}"
+    echo -e "    ${YELLOW}Please install FFmpeg:${NC}"
+    echo -e "    ${CYAN}Ubuntu/Debian:${NC} sudo apt install ffmpeg"
+    echo -e "    ${CYAN}macOS:${NC} brew install ffmpeg"
+    echo -e "    ${CYAN}Windows:${NC} Download from https://ffmpeg.org/download.html"
+    exit 2
+  fi
+
+  echo -e "[${GREEN}✓${NC}] ${GREEN}FFmpeg found: $(ffmpeg -version | head -n1 | cut -d' ' -f3)${NC}"
+  echo -e "[${GREEN}+${NC}] ${GREEN}All prerequisites are met.${NC}"
 }
 
 # Function to convert a single audio file to MP3 while preserving metadata
@@ -151,50 +168,56 @@ main() {
 
   while [[ $# -gt 0 ]]; do
     case $1 in
-      -f|--file)
-        input_file="$2"
-        shift 2
-        ;;
-      -o|--output)
-        OUTPUT_DIR="$2"
-        shift 2
-        ;;
-      -d|--directory)
-        directory="$2"
-        shift 2
-        ;;
-      -r|--recursive)
-        RECURSIVE_MODE=true
-        shift
-        ;;
-      -c|--copy)
-        COPY_MODE=true
-        shift
-        ;;
-      -s|--skip-existing)
-        SKIP_EXISTING=true
-        shift
-        ;;
-      -nc|--no-confirm)
-        NO_CONFIRM=true
-        shift
-        ;;
-      -h|--help)
-        show_ascii
-        show_help
-        exit 0
-        ;;
-      *)
-        show_ascii
-        show_help
-        echo -e "[${RED}+${NC}] ${RED}Invalid option: $1${NC}"
-        exit 1
-        ;;
+    -f | --file)
+      input_file="$2"
+      shift 2
+      ;;
+    -o | --output)
+      OUTPUT_DIR="$2"
+      shift 2
+      ;;
+    -d | --directory)
+      directory="$2"
+      shift 2
+      ;;
+    -r | --recursive)
+      RECURSIVE_MODE=true
+      shift
+      ;;
+    -c | --copy)
+      COPY_MODE=true
+      shift
+      ;;
+    -s | --skip-existing)
+      SKIP_EXISTING=true
+      shift
+      ;;
+    -nc | --no-confirm)
+      NO_CONFIRM=true
+      shift
+      ;;
+    -h | --help)
+      show_ascii
+      check_prerequisites
+      echo
+      show_help
+      exit 0
+      ;;
+    *)
+      show_ascii
+      check_prerequisites
+      echo
+      show_help
+      echo -e "[${RED}+${NC}] ${RED}Invalid option: $1${NC}"
+      exit 1
+      ;;
     esac
   done
 
   if [[ -n "$directory" ]]; then
     show_ascii
+    check_prerequisites
+    echo
     process_directory "$directory"
   elif [[ -n "$input_file" ]]; then
     local file_name
@@ -205,9 +228,13 @@ main() {
 
     local output_file="${destination_dir}/${file_name%.*}.mp3"
     show_ascii
+    check_prerequisites
+    echo
     convert_to_mp3 "$input_file" "$output_file"
   else
     show_ascii
+    check_prerequisites
+    echo
     show_help
     echo -e "[${RED}+${NC}] ${RED}No input file or directory provided.${NC}"
     exit 1

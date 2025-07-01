@@ -4,7 +4,7 @@ This is a Bash script that converts various audio file formats (e.g., `.wav`, `.
 
 ## Versions
 
-**Current version**: 0.2.1
+**Current version**: 0.0.1
 
 ## Table of Contents
 
