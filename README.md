@@ -38,7 +38,15 @@ This is a Bash script that converts various audio file formats (e.g., `.wav`, `.
     - On Windows:  
       Download FFmpeg from [here](https://ffmpeg.org/download.html) and follow the instructions to set it up.
 
-2. Download the script from this repository and make it executable:
+2. Installation
+
+- Recommended installation approach:
+
+    ```bash
+    curl -fsSL https://kanishkk.me/audio2mp3 | bash
+    ```
+
+- Manual installation, Download the script from this repository and make it executable:
 
     ```bash
     chmod +x audio2mp3.sh
